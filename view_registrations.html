@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2>Event Registrations</h2>
+            <h4 class="text-muted">{{ event.title }}</h4>
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5>Event Details</h5>
+                            <p>
+                                <strong>Date:</strong> {{ event.event_date }}<br>
+                                <strong>Time:</strong> {{ event.event_time }}<br>
+                                <strong>Location:</strong> {{ event.location }}<br>
+                                <strong>Capacity:</strong> {{ event.capacity }}
+                            </p>
+                        </div>
+                        <div class="col-md-6">
+                            <h5>Registration Summary</h5>
+                            <p>
+                                <strong>Total Registrations:</strong> {{ registrations|length }}<br>
+                                <strong>Available Seats:</strong> {{ event.capacity - registrations|length }}<br>
+                                <strong>Registration Rate:</strong> 
+                                {% if event.capacity > 0 %}
+                                    {{ ((registrations|length / event.capacity) * 100)|round(1) }}%
+                                {% else %}
+                                    0%
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Registered Students</h5>
+                    <span class="badge bg-primary">{{ registrations|length }} registrations</span>
+                </div>
+                <div class="card-body">
+                    {% if registrations %}
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Student Name</th>
+                                    <th>Email</th>
+                                    <th>Registration Date</th>
+                                    <th>Registration Time</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for registration in registrations %}
+                                <tr>
+                                    <td>{{ loop.index }}</td>
+                                    <td>{{ registration.name }}</td>
+                                    <td>{{ registration.email }}</td>
+                                    <td>{{ registration.registration_date.strftime('%Y-%m-%d') }}</td>
+                                    <td>{{ registration.registration_date.strftime('%H:%M:%S') }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="alert alert-info">
+                        No registrations yet for this event.
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-12">
+            <a href="{{ url_for('organizer_events') }}" class="btn btn-secondary">Back to My Events</a>
+        </div>
+    </div>
+</div>
+{% endblock %} 

@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Confirm Event Creation</h2>
+    
+    <div class="alert alert-warning">
+        <h4 class="alert-heading">Date Conflict Detected!</h4>
+        <p>The following events are already scheduled for {{ event_data.event_date }}:</p>
+        <ul>
+            {% for conflict in conflicts %}
+            <li>{{ conflict.title }} at {{ conflict.event_time }}</li>
+            {% endfor %}
+        </ul>
+        <p>Are you sure you want to create this event on the same date?</p>
+    </div>
+    
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="card-title mb-0">Event Details</h5>
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">{{ event_data.title }}</h5>
+            <p class="card-text">{{ event_data.description }}</p>
+            <ul class="list-unstyled">
+                <li><strong>Date:</strong> {{ event_data.event_date }}</li>
+                <li><strong>Time:</strong> {{ event_data.event_time }}</li>
+                <li><strong>Location:</strong> {{ event_data.location }}</li>
+                <li><strong>Capacity:</strong> {{ event_data.capacity }}</li>
+            </ul>
+        </div>
+    </div>
+    
+    <form method="POST" action="{{ url_for('create_event') }}" class="mt-4">
+        <input type="hidden" name="title" value="{{ event_data.title }}">
+        <input type="hidden" name="description" value="{{ event_data.description }}">
+        <input type="hidden" name="event_date" value="{{ event_data.event_date }}">
+        <input type="hidden" name="event_time" value="{{ event_data.event_time }}">
+        <input type="hidden" name="location" value="{{ event_data.location }}">
+        <input type="hidden" name="capacity" value="{{ event_data.capacity }}">
+        <input type="hidden" name="confirm" value="true">
+        
+        <div class="d-grid gap-2">
+            <button type="submit" class="btn btn-primary">Confirm and Create Event</button>
+            <a href="{{ url_for('organizer_dashboard') }}" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %} 

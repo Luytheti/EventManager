@@ -1,0 +1,315 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>My Events</h2>
+        <a href="{{ url_for('create_event') }}" class="btn btn-primary">
+            <i class="fas fa-plus me-2"></i>Create New Event
+        </a>
+    </div>
+
+    {% if events %}
+    <div class="row">
+        {% for event in events %}
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0">{{ event.title }}</h5>
+                    <span class="badge bg-primary">{{ event.registered_count }} registered</span>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <p class="mb-1"><i class="far fa-calendar-alt text-primary me-2"></i>Date: {{ event.event_date }}</p>
+                            <p class="mb-1"><i class="far fa-clock text-primary me-2"></i>Time: {{ event.event_time }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p class="mb-1"><i class="fas fa-map-marker-alt text-primary me-2"></i>Location: {{ event.location }}</p>
+                            <p class="mb-1"><i class="fas fa-users text-primary me-2"></i>Capacity: {{ event.capacity }}</p>
+                        </div>
+                    </div>
+                    <p class="card-text">{{ event.description }}</p>
+                </div>
+                <div class="card-footer bg-light">
+                    <div class="d-flex justify-content-between">
+                        <a href="{{ url_for('view_registrations', event_id=event.event_id) }}" class="btn btn-outline-primary btn-sm">
+                            <i class="fas fa-list me-1"></i>View Registrations
+                        </a>
+                        <button type="button" class="btn btn-outline-success btn-sm" data-bs-toggle="modal" data-bs-target="#feedbackModal{{ event.event_id }}">
+                            <i class="fas fa-star me-1"></i>View Feedback
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Feedback Modal for each event -->
+        <div class="modal fade" id="feedbackModal{{ event.event_id }}" tabindex="-1" aria-labelledby="feedbackModalLabel{{ event.event_id }}" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="feedbackModalLabel{{ event.event_id }}">Feedback for {{ event.title }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- Event Details -->
+                        <div class="card shadow-sm mb-4">
+                            <div class="card-header bg-light">
+                                <h6 class="card-title mb-0">Event Details</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="d-flex align-items-center mb-3">
+                                            <i class="far fa-calendar-alt text-primary me-2"></i>
+                                            <div>
+                                                <small class="text-muted d-block">Date</small>
+                                                <strong>{{ event.event_date }}</strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="d-flex align-items-center mb-3">
+                                            <i class="far fa-clock text-primary me-2"></i>
+                                            <div>
+                                                <small class="text-muted d-block">Time</small>
+                                                <strong>{{ event.event_time }}</strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="d-flex align-items-center mb-3">
+                                            <i class="fas fa-map-marker-alt text-primary me-2"></i>
+                                            <div>
+                                                <small class="text-muted d-block">Location</small>
+                                                <strong>{{ event.location }}</strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="d-flex align-items-center mb-3">
+                                            <i class="fas fa-users text-primary me-2"></i>
+                                            <div>
+                                                <small class="text-muted d-block">Capacity</small>
+                                                <strong>{{ event.capacity }}</strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Feedback Statistics -->
+                        <div class="row mb-4">
+                            <div class="col-md-4">
+                                <div class="card shadow-sm h-100">
+                                    <div class="card-body text-center">
+                                        <div class="display-4 text-primary mb-2">5</div>
+                                        <h6 class="text-muted">Total Reviews</h6>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card shadow-sm h-100">
+                                    <div class="card-body text-center">
+                                        <div class="display-4 text-warning mb-2">4.6</div>
+                                        <h6 class="text-muted">Average Rating</h6>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card shadow-sm h-100">
+                                    <div class="card-body text-center">
+                                        <div class="display-4 text-success mb-2">4</div>
+                                        <h6 class="text-muted">Positive Reviews (4+ stars)</h6>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Individual Feedback -->
+                        <div class="card shadow-sm">
+                            <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                                <h6 class="card-title mb-0">Student Feedback</h6>
+                                <span class="badge bg-primary">5 Registrations</span>
+                            </div>
+                            <div class="card-body">
+                                <!-- Feedback 1 -->
+                                <div class="card mb-3 border-start border-4 border-primary">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-center mb-3">
+                                            <div>
+                                                <h6 class="card-title mb-0">John Doe</h6>
+                                                <small class="text-muted">john.doe@example.com</small>
+                                            </div>
+                                            <small class="text-muted">Registered: 2023-12-01 10:30:00</small>
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <div class="d-flex align-items-center">
+                                                <div class="me-2">
+                                                    <i class="fas fa-star text-warning"></i>
+                                                    <i class="fas fa-star text-warning"></i>
+                                                    <i class="fas fa-star text-warning"></i>
+                                                    <i class="fas fa-star text-warning"></i>
+                                                    <i class="fas fa-star text-warning"></i>
+                                                </div>
+                                                <span class="badge bg-warning text-dark">5/5</span>
+                                            </div>
+                                        </div>
+                                        <div class="feedback-comment p-3 bg-light rounded">
+                                            <p class="card-text mb-0">This was an excellent event! The content was very informative and the speaker was engaging. I learned a lot and would definitely attend again.</p>
+                                        </div>
+                                        <small class="text-muted d-block mt-2">
+                                            <i class="far fa-clock me-1"></i>Feedback provided on: 2023-12-16 15:45:00
+                                        </small>
+                                    </div>
+                                </div>
+                                
+                                <!-- Feedback 2 -->
+                                <div class="card mb-3 border-start border-4 border-primary">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-center mb-3">
+                                            <div>
+                                                <h6 class="card-title mb-0">[Student Name]</h6>
+                                                <small class="text-muted">[student.email@example.com]</small>
+                                            </div>
+                                            <small class="text-muted">Registered: [Registration Date]</small>
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <div class="d-flex align-items-center">
+                                                <div class="me-2">
+                                                    <i class="fas fa-star text-warning"></i>
+                                                    <i class="fas fa-star text-warning"></i>
+                                                    <i class="fas fa-star text-warning"></i>
+                                                    <i class="fas fa-star text-warning"></i>
+                                                    <i class="far fa-star text-warning"></i>
+                                                </div>
+                                                <span class="badge bg-warning text-dark">4/5</span>
+                                            </div>
+                                        </div>
+                                        <div class="feedback-comment p-3 bg-light rounded">
+                                            <p class="card-text mb-0">[Feedback Comment]</p>
+                                        </div>
+                                        <small class="text-muted d-block mt-2">
+                                            <i class="far fa-clock me-1"></i>Feedback provided on: [Feedback Date]
+                                        </small>
+                                    </div>
+                                </div>
+                                
+                                <!-- Feedback 3 -->
+                                <div class="card mb-3 border-start border-4 border-primary">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-center mb-3">
+                                            <div>
+                                                <h6 class="card-title mb-0">[Student Name]</h6>
+                                                <small class="text-muted">[student.email@example.com]</small>
+                                            </div>
+                                            <small class="text-muted">Registered: [Registration Date]</small>
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <div class="d-flex align-items-center">
+                                                <div class="me-2">
+                                                    <i class="fas fa-star text-warning"></i>
+                                                    <i class="fas fa-star text-warning"></i>
+                                                    <i class="fas fa-star text-warning"></i>
+                                                    <i class="fas fa-star text-warning"></i>
+                                                    <i class="fas fa-star text-warning"></i>
+                                                </div>
+                                                <span class="badge bg-warning text-dark">5/5</span>
+                                            </div>
+                                        </div>
+                                        <div class="feedback-comment p-3 bg-light rounded">
+                                            <p class="card-text mb-0">[Feedback Comment]</p>
+                                        </div>
+                                        <small class="text-muted d-block mt-2">
+                                            <i class="far fa-clock me-1"></i>Feedback provided on: [Feedback Date]
+                                        </small>
+                                    </div>
+                                </div>
+                                
+                                <!-- Feedback 4 -->
+                                <div class="card mb-3 border-start border-4 border-primary">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-center mb-3">
+                                            <div>
+                                                <h6 class="card-title mb-0">[Student Name]</h6>
+                                                <small class="text-muted">[student.email@example.com]</small>
+                                            </div>
+                                            <small class="text-muted">Registered: [Registration Date]</small>
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <div class="d-flex align-items-center">
+                                                <div class="me-2">
+                                                    <i class="fas fa-star text-warning"></i>
+                                                    <i class="fas fa-star text-warning"></i>
+                                                    <i class="fas fa-star text-warning"></i>
+                                                    <i class="fas fa-star text-warning"></i>
+                                                    <i class="far fa-star text-warning"></i>
+                                                </div>
+                                                <span class="badge bg-warning text-dark">4/5</span>
+                                            </div>
+                                        </div>
+                                        <div class="feedback-comment p-3 bg-light rounded">
+                                            <p class="card-text mb-0">[Feedback Comment]</p>
+                                        </div>
+                                        <small class="text-muted d-block mt-2">
+                                            <i class="far fa-clock me-1"></i>Feedback provided on: [Feedback Date]
+                                        </small>
+                                    </div>
+                                </div>
+                                
+                                <!-- Feedback 5 -->
+                                <div class="card mb-3 border-start border-4 border-primary">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-center mb-3">
+                                            <div>
+                                                <h6 class="card-title mb-0">[Student Name]</h6>
+                                                <small class="text-muted">[student.email@example.com]</small>
+                                            </div>
+                                            <small class="text-muted">Registered: [Registration Date]</small>
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <div class="d-flex align-items-center">
+                                                <div class="me-2">
+                                                    <i class="fas fa-star text-warning"></i>
+                                                    <i class="fas fa-star text-warning"></i>
+                                                    <i class="fas fa-star text-warning"></i>
+                                                    <i class="fas fa-star text-warning"></i>
+                                                    <i class="fas fa-star text-warning"></i>
+                                                </div>
+                                                <span class="badge bg-warning text-dark">5/5</span>
+                                            </div>
+                                        </div>
+                                        <div class="feedback-comment p-3 bg-light rounded">
+                                            <p class="card-text mb-0">[Feedback Comment]</p>
+                                        </div>
+                                        <small class="text-muted d-block mt-2">
+                                            <i class="far fa-clock me-1"></i>Feedback provided on: [Feedback Date]
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <a href="{{ url_for('view_feedback', event_id=event.event_id) }}" class="btn btn-primary">View Full Feedback Page</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="alert alert-info">
+        <i class="fas fa-info-circle me-2"></i>You haven't created any events yet. Click the "Create New Event" button to get started.
+    </div>
+    {% endif %}
+</div>
+{% endblock %} 

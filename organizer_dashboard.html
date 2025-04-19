@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2>Welcome, {{ session.user_name }}!</h2>
+            <p class="text-muted">Organizer Dashboard</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Create Event Section -->
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h4>Create New Event</h4>
+                </div>
+                <div class="card-body">
+                    <form action="{{ url_for('create_event') }}" method="POST">
+                        <div class="mb-3">
+                            <label for="title" class="form-label">Event Title</label>
+                            <input type="text" class="form-control" id="title" name="title" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Description</label>
+                            <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="event_date" class="form-label">Event Date</label>
+                            <input type="date" class="form-control" id="event_date" name="event_date" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="event_time" class="form-label">Event Time</label>
+                            <input type="time" class="form-control" id="event_time" name="event_time" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="location" class="form-label">Location</label>
+                            <input type="text" class="form-control" id="location" name="location" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="capacity" class="form-label">Capacity</label>
+                            <input type="number" class="form-control" id="capacity" name="capacity" min="1" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Create Event</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- View Events Section -->
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h4>My Events</h4>
+                </div>
+                <div class="card-body">
+                    <p>View and manage your created events and their registrations.</p>
+                    <a href="{{ url_for('organizer_events') }}" class="btn btn-primary">View My Events</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Events Section -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <h3>Recent Events</h3>
+            <div class="row">
+                {% for event in recent_events %}
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ event.title }}</h5>
+                            <p class="card-text">
+                                <strong>Date:</strong> {{ event.event_date }}<br>
+                                <strong>Time:</strong> {{ event.event_time }}<br>
+                                <strong>Location:</strong> {{ event.location }}<br>
+                                <strong>Registrations:</strong> {{ event.registered_count }}/{{ event.capacity }}
+                            </p>
+                            <a href="{{ url_for('view_registrations', event_id=event.event_id) }}" class="btn btn-primary">View Registrations</a>
+                        </div>
+                    </div>
+                </div>
+                {% else %}
+                <div class="col-12">
+                    <div class="alert alert-info">
+                        You haven't created any events yet. Create your first event using the form above.
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Account Management Section -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card border-danger">
+                <div class="card-header bg-danger text-white">
+                    <h4 class="mb-0">Danger Zone</h4>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">Delete Account</h5>
+                    <p class="card-text text-danger">
+                        Warning: This action cannot be undone. All your events and associated data will be permanently deleted.
+                    </p>
+                    <form action="{{ url_for('delete_organizer_account') }}" method="POST" onsubmit="return confirm('Are you sure you want to delete your account? This action cannot be undone.');">
+                        <button type="submit" class="btn btn-danger">Delete My Account</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

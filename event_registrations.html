@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2>Event Registrations</h2>
+            <h4 class="text-muted">{{ event.title }}</h4>
+            <p>
+                <strong>Date:</strong> {{ event.event_date }} |
+                <strong>Time:</strong> {{ event.event_time }} |
+                <strong>Location:</strong> {{ event.location }} |
+                <strong>Capacity:</strong> {{ event.capacity }} |
+                <strong>Registered:</strong> {{ registrations|length }}
+            </p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Registered Students</h5>
+                </div>
+                <div class="card-body">
+                    {% if registrations %}
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Student Name</th>
+                                    <th>Email</th>
+                                    <th>Registration Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for registration in registrations %}
+                                <tr>
+                                    <td>{{ registration.name }}</td>
+                                    <td>{{ registration.email }}</td>
+                                    <td>{{ registration.registration_date }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="alert alert-info">
+                        No registrations yet for this event.
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

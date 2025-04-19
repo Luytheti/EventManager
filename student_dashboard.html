@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2>Welcome, {{ session.user_name }}!</h2>
+            <p class="text-muted">Student Dashboard</p>
+        </div>
+    </div>
+
+    <!-- Upcoming Events Section -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4>Upcoming Events</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        {% for event in upcoming_events %}
+                        <div class="col-md-4 mb-4">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ event.title }}</h5>
+                                    <p class="card-text">
+                                        <strong>Date:</strong> {{ event.event_date }}<br>
+                                        <strong>Time:</strong> {{ event.event_time }}<br>
+                                        <strong>Location:</strong> {{ event.location }}<br>
+                                        <strong>Organizer:</strong> {{ event.club_name }}<br>
+                                        <strong>Available Seats:</strong> {{ event.available_seats }}/{{ event.capacity }}
+                                    </p>
+                                    <a href="{{ url_for('event_details', event_id=event.event_id) }}" class="btn btn-primary">View Details</a>
+                                </div>
+                            </div>
+                        </div>
+                        {% else %}
+                        <div class="col-12">
+                            <div class="alert alert-info">
+                                No upcoming events available at the moment.
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- My Registrations Section -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4>My Registrations</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        {% for registration in registrations %}
+                        <div class="col-md-4 mb-4">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ registration.title }}</h5>
+                                    <p class="card-text">
+                                        <strong>Date:</strong> {{ registration.event_date }}<br>
+                                        <strong>Time:</strong> {{ registration.event_time }}<br>
+                                        <strong>Location:</strong> {{ registration.location }}<br>
+                                        <strong>Organizer:</strong> {{ registration.club_name }}<br>
+                                        <strong>Registration Date:</strong> {{ registration.registration_date }}
+                                    </p>
+                                    <div class="btn-group">
+                                        <a href="{{ url_for('event_details', event_id=registration.event_id) }}" class="btn btn-primary">View Details</a>
+                                        {% if registration.event_date > today_date %}
+                                        <form action="{{ url_for('unregister_event', event_id=registration.event_id) }}" method="POST" class="d-inline">
+                                            <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to unregister from this event?')">Unregister</button>
+                                        </form>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% else %}
+                        <div class="col-12">
+                            <div class="alert alert-info">
+                                You haven't registered for any events yet.
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

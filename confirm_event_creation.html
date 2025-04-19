@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="alert alert-warning">
+        <h4 class="alert-heading">Event Date Conflict Detected!</h4>
+        <p>The following events are already scheduled for {{ pending_event.event_date }}:</p>
+    </div>
+
+    <!-- Existing Events -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0">Existing Events</h5>
+        </div>
+        <div class="card-body">
+            {% for event in existing_events %}
+            <div class="mb-3 p-3 border rounded">
+                <h6>{{ event.title }}</h6>
+                <p class="mb-1">
+                    <strong>Time:</strong> {{ event.event_time }}<br>
+                    <strong>Location:</strong> {{ event.location }}<br>
+                    <strong>Organizer:</strong> {{ event.club_name }}
+                </p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- New Event Details -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0">Your New Event</h5>
+        </div>
+        <div class="card-body">
+            <h6>{{ pending_event.title }}</h6>
+            <p class="mb-1">
+                <strong>Date:</strong> {{ pending_event.event_date }}<br>
+                <strong>Time:</strong> {{ pending_event.event_time }}<br>
+                <strong>Location:</strong> {{ pending_event.location }}<br>
+                <strong>Capacity:</strong> {{ pending_event.capacity }}
+            </p>
+            {% if pending_event.description %}
+            <p class="mb-1"><strong>Description:</strong> {{ pending_event.description }}</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Confirmation Form -->
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Do you want to proceed with creating this event?</h5>
+            <p class="text-muted">Creating multiple events on the same date may affect attendance.</p>
+            
+            <form action="{{ url_for('create_event') }}" method="POST">
+                <input type="hidden" name="title" value="{{ pending_event.title }}">
+                <input type="hidden" name="description" value="{{ pending_event.description }}">
+                <input type="hidden" name="event_date" value="{{ pending_event.event_date }}">
+                <input type="hidden" name="event_time" value="{{ pending_event.event_time }}">
+                <input type="hidden" name="location" value="{{ pending_event.location }}">
+                <input type="hidden" name="capacity" value="{{ pending_event.capacity }}">
+                <input type="hidden" name="confirm" value="true">
+                
+                <div class="btn-group">
+                    <button type="submit" class="btn btn-primary">Yes, Create Event</button>
+                    <a href="{{ url_for('organizer_dashboard') }}" class="btn btn-secondary">No, Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %} 

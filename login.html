@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="text-center">Login</h3>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" name="email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="password" name="password" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="user_type" class="form-label">Login As</label>
+                        <select class="form-select" id="user_type" name="user_type" required>
+                            <option value="student">Student</option>
+                            <option value="organizer">Organizer</option>
+                        </select>
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">Login</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="mt-4">
+    <h4>Hardcoded Credentials:</h4>
+    <div class="card">
+        <div class="card-body">
+            <h5>Student Login:</h5>
+            <p>Email: student@example.com<br>
+            Password: student123</p>
+            
+            <h5>Organizer Login:</h5>
+            <p>Email: organizer@example.com<br>
+            Password: organizer123</p>
+        </div>
+    </div>
+</div>
+{% endblock %} 
